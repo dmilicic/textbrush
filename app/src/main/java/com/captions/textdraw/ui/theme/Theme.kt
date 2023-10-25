@@ -23,7 +23,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF155667), // this will match Antarctica color schemes
+    primary = Color(0xFF7494AD), // this will match Antarctica color schemes
     secondary = Color(0xFF8CAFC2),
     tertiary = Color(0xFF3E4852)
 

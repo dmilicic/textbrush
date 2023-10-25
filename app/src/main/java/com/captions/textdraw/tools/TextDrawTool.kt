@@ -1,6 +1,7 @@
 package com.captions.textdraw.tools
 
 import android.graphics.PointF
+import android.util.Log
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -56,7 +57,7 @@ class TextDrawTool {
 
     fun onDragStarted(position: PointF) {
         isDragging = true
-        segments.add(Segment(points = mutableListOf(position))) // create a new segment
+        segments.add(Segment()) // create a new segment
     }
 
     fun onDragEvent(currentPosition: PointF, prevPosition: PointF) {
@@ -77,12 +78,14 @@ class TextDrawTool {
     fun onDraw(drawScope: DrawScope) = with(drawScope) {
         if (segments.isEmpty()) return@with
 
+        // redraw all segments
         segments.forEach {
             currentCharIdx = 0
 
             it.points.forEachIndexed { index, point ->
                 if (index == 0) return@forEachIndexed
 
+                // after we have passed the set number of points, draw the letter
                 if (index % letterSize == 0) {
                     val section = it.points.subList(index - letterSize, index)
                     drawText(drawScope, section)
@@ -93,6 +96,7 @@ class TextDrawTool {
 
     @OptIn(ExperimentalTextApi::class)
     private fun drawText(drawScope: DrawScope, section: List<PointF>) = with(drawScope) {
+
         // get the average position of the last number of points
         val avgX = section.sumOf { it.x.toDouble() } / section.size
         val avgY = section.sumOf { it.y.toDouble() } / section.size
@@ -100,15 +104,16 @@ class TextDrawTool {
 
         val charToDraw = textToDraw[currentCharIdx].toString()
 
-        val avgDegrees = calculateAvgDegree(section.take(3))
-
         val measuredText = textMeasurer?.measure(
             text = charToDraw,
             style = TextStyle(
                 fontSize = fontSize,
-                color = Color.Black
+                color = Color.White
             ),
         )
+
+        // we rotate the letter based on the average degree value of set number of lines which the user dragged
+        val avgDegrees = calculateAvgDegree(section.take(2)) // last 2 points works best
 
         rotate(
             degrees = avgDegrees,
