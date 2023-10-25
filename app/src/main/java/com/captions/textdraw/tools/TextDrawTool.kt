@@ -1,7 +1,6 @@
 package com.captions.textdraw.tools
 
 import android.graphics.PointF
-import android.util.Log
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
